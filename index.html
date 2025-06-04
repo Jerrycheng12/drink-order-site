@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>訂飲料表單</title>
+</head>
+<body>
+  <h1>飲料訂購表單</h1>
+  <form id="drinkForm">
+    姓名：<input type="text" name="name" required><br><br>
+    飲料：
+    <select name="drink">
+      <option value="珍珠奶茶">珍珠奶茶</option>
+      <option value="綠茶">綠茶</option>
+      <option value="烏龍茶">烏龍茶</option>
+    </select><br><br>
+    甜度：
+    <select name="sugar">
+      <option value="正常">正常</option>
+      <option value="半糖">半糖</option>
+      <option value="無糖">無糖</option>
+    </select><br><br>
+    冰塊：
+    <select name="ice">
+      <option value="正常冰">正常冰</option>
+      <option value="少冰">少冰</option>
+      <option value="去冰">去冰</option>
+    </select><br><br>
+    <button type="submit">送出訂單</button>
+  </form>
+
+  <div id="response" style="margin-top: 20px; font-weight: bold; color: green;"></div>
+
+  <script>
+    const form = document.getElementById("drinkForm");
+    const responseDiv = document.getElementById("response");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const formData = new FormData(form);
+
+      fetch("https://script.google.com/macros/s/AKfycbzvLt-eRukwxmGst0DCD8A3sch1SqiI5vD3r9kCoEJH_CJswXTEC6bUv1JONpR85oOJlA/exec", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.text())
+      .then(text => {
+        if (text === "OK") {
+          responseDiv.innerText = "✅ 訂單已送出，謝謝你的點餐！";
+          form.reset();
+        } else {
+          responseDiv.innerText = "⚠️ 發生錯誤：" + text;
+        }
+      })
+      .catch(error => {
+        responseDiv.innerText = "❌ 無法送出訂單：" + error;
+      });
+    });
+  </script>
+</body>
+</html>
